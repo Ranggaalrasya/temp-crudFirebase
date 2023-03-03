@@ -26,7 +26,7 @@ class _DisplayDataScreenState extends State<DisplayDataScreen> {
           child: Icon(Icons.add)),
       appBar: AppBar(
         backgroundColor: Colors.red.shade900,
-        centerTitle: true,
+        centerTitle: true, 
         title: Text(
           'Home',
           style: TextStyle(fontWeight: FontWeight.w300),
@@ -164,41 +164,41 @@ class _SendOrUpdateDataState extends State<SendOrUpdateData> {
 
   // Select and image from the gallery or take a picture with the camera
   // Then upload to Firebase Storage
-  Future<void> _upload(String inputSource) async {
-    final picker = ImagePicker();
-    XFile? pickedImage;
-    try {
-      pickedImage = await picker.pickImage(
-          source: inputSource == 'camera'
-              ? ImageSource.camera
-              : ImageSource.gallery,
-          maxWidth: 1920);
+  // Future<void> _upload(String inputSource) async {
+  //   final picker = ImagePicker();
+  //   XFile? pickedImage;
+  //   try {
+  //     pickedImage = await picker.pickImage(
+  //         source: inputSource == 'camera'
+  //             ? ImageSource.camera
+  //             : ImageSource.gallery,
+  //         maxWidth: 1920);
 
-      final String fileName = path.basename(pickedImage!.path);
-      File imageFile = File(pickedImage.path);
+  //     final String fileName = path.basename(pickedImage!.path);
+  //     File imageFile = File(pickedImage.path);
 
-      try {
-        // Uploading the selected image with some custom meta data
-        await storage.ref(fileName).putFile(
-            imageFile,
-            SettableMetadata(customMetadata: {
-              'uploaded_by': 'Admin Rangga',
-              'description': 'Test Image'
-            }));
+  //     try {
+  //       // Uploading the selected image with some custom meta data
+  //       await storage.ref(fileName).putFile(
+  //           imageFile,
+  //           SettableMetadata(customMetadata: {
+  //             'uploaded_by': 'Admin Rangga',
+  //             'description': 'Test Image'
+  //           }));
 
-        // Refresh the UI
-        setState(() {});
-      } on FirebaseException catch (error) {
-        if (kDebugMode) {
-          print(error);
-        }
-      }
-    } catch (err) {
-      if (kDebugMode) {
-        print(err);
-      }
-    }
-  }
+  //       // Refresh the UI
+  //       setState(() {});
+  //     } on FirebaseException catch (error) {
+  //       if (kDebugMode) {
+  //         print(error);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     if (kDebugMode) {
+  //       print(err);
+  //     }
+  //   }
+  // }
 
   // Retriew the uploaded images
   // This function is called when the app launches for the first time or when an image is uploaded or deleted
@@ -226,6 +226,7 @@ class _SendOrUpdateDataState extends State<SendOrUpdateData> {
   TextEditingController nameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
   bool showProgressIndicator = false;
 
   @override
@@ -299,11 +300,16 @@ class _SendOrUpdateDataState extends State<SendOrUpdateData> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton.icon(
-                    onPressed: () => _upload('camera'),
+                    onPressed: () async {
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
+                      print('${file?.path}');
+
+                    },
                     icon: const Icon(Icons.camera),
                     label: const Text('camera')),
                 ElevatedButton.icon(
-                    onPressed: () => _upload('gallery'),
+                    onPressed: () {},
                     icon: const Icon(Icons.library_add),
                     label: const Text('Gallery')),
               ],
